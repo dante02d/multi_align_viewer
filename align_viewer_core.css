@@ -1,0 +1,15 @@
+.rTable { display: table; }
+.rTableRow { display: table-row; }
+.rTableHeading { display: table-header-group; }
+.rTableBody { display: table-row-group; }
+.rTableFoot { display: table-footer-group; }
+.rTableCell, .rTableHead { display: table-cell; width: 25px; }
+.rTableCell.sequenceName{
+	width: 70px;
+	font-weight: bold;
+}
+
+div.rTableCell:hover ~ div:nth-child(1n)
+{
+	background-color: yellow;
+}

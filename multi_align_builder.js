@@ -1,6 +1,6 @@
 class Multi_align_builder
 {
-	constructor(div_b)
+	constructor(div_b,data_Obj)
 	{
 		this.sequence_lengt =300;
 		this.sequences_number=3;
@@ -8,11 +8,20 @@ class Multi_align_builder
 		this.label_interval_size = 10;
 		this.max_residues_per_row = 50;
 		this.div_base = div_b;
+		this.div_base.innerHTML = "";
 		this._currentNum = this.label_number_star;
 		this._invervalCount = 1;
-		this.DataObj = 0;
+		this.dataObj = data_Obj;
+		this.dummyRows = 1 /*Number of rows with no sequence information*/
+		this.setupViewer();
 		this.buildMainElements();
 
+	}
+
+	setupViewer()
+	{
+		this.sequences_number = this.dataObj.length;
+		this.sequence_lengt = this.dataObj[0].Alignment.length;
 	}
 
 	buildMainElements()
@@ -79,7 +88,7 @@ class Multi_align_builder
 
 	addLabeCell(row)
 	{
-		return "<div class='rTableCell' id='seqN"+row+"'> Xxx </div>";
+		return "<div class='rTableCell sequenceName' id='seqN"+row+"'> "+this.dataObj[row-this.dummyRows].VDB+"_"+this.dataObj[row-this.dummyRows].Chain+" </div>";
 	}
 
 	addNumberCell(row,col,startInterval)
@@ -108,6 +117,6 @@ class Multi_align_builder
 	}
 	addResidueCell(row, col)
 	{
-		return "<div class='rTableCell' id='Res"+row+"_"+col+"'> R </div>";
+		return "<div class='rTableCell' id='Res"+row+"_"+col+"'> "+this.dataObj[row-this.dummyRows].Alignment[col-1]+" </div>";
 	}
 }
