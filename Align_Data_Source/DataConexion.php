@@ -1,5 +1,5 @@
 <?php
-    class conection
+    class Conection
     {
     	private $conn;
     	private $user="root";

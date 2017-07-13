@@ -13,3 +13,32 @@ div.rTableCell:hover ~ div:nth-child(1n)
 {
 	background-color: yellow;
 }
+
+.rTableCell.seqConservRes
+{
+	font-weight: bold;
+}
+
+.rTableCell.Interface
+{
+	//color:red;
+	background-color: red;
+}
+
+.rTableCell.Core
+{
+	//color:green;
+	background-color: Lime;
+}
+
+.rTableCell.SurfaceIn
+{
+	//color:blue;
+	background-color: blue;
+}
+
+.rTableCell.SurfaceOut
+{
+	//color:navy;
+	background-color: SkyBlue;
+}
