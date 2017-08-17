@@ -3,15 +3,24 @@
 .rTableHeading { display: table-header-group; }
 .rTableBody { display: table-row-group; }
 .rTableFoot { display: table-footer-group; }
-.rTableCell, .rTableHead { display: table-cell; width: 25px; }
+.rTableCell, .rTableHead { display: table-cell; width: 35px; }
 .rTableCell.sequenceName{
 	width: 70px;
 	font-weight: bold;
 }
 
-div.rTableCell:hover ~ div:nth-child(1n)
+/*div.rTableCell:hover ~ div:nth-child(1n)
 {
 	background-color: yellow;
+}*/
+
+.rTableCell.Hotspot
+{
+	/*color: yellow;*/
+	background-color: yellow;
+	border-style: solid;
+	border-color: violet;
+	border-width: 2px;
 }
 
 .rTableCell.seqConservRes
@@ -34,11 +43,11 @@ div.rTableCell:hover ~ div:nth-child(1n)
 .rTableCell.SurfaceIn
 {
 	//color:blue;
-	background-color: blue;
+	background-color: SkyBlue;
 }
 
 .rTableCell.SurfaceOut
 {
 	//color:navy;
-	background-color: SkyBlue;
+	background-color: DodgerBlue;
 }

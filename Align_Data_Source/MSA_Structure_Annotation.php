@@ -87,8 +87,9 @@ include "../API2/VDB_Structural_Regions.php";
 			$start_seq = intval($seq->SeqStart);
 			$resCount = 0;
 			$seqCount = $start_seq;
-			//var_dump($objAdet);
+			
 			//print "<h1>$seq->VDB</h1>";
+			//var_dump($objAdet);
 			for($i=0;$i<count($objAdet);$i++)
 			{
 				//print "<p>".$objAdet[$i]->Res."=".$seq->Alignment[$i]."</p>"; 

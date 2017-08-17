@@ -6,7 +6,7 @@ class Multi_align_builder
 		this.sequences_number=3;
 		this.label_number_star = 1;
 		this.label_interval_size = 10;
-		this.max_residues_per_row = 50;
+		this.max_residues_per_row = 60;
 		this.div_base = div_b;
 		this.div_base.innerHTML = "";
 		this._currentNum = this.label_number_star;
@@ -15,6 +15,7 @@ class Multi_align_builder
 		this.dummyRows = 3; /*Number of rows with no sequence information*/
 		this.objAnalitycs = new MSA_Analitycs(data_Obj);
 		this.seq_conservedResidues= [];
+		this.columnNumbershotspots=[]
 		this.setupViewer();
 		this.buildMainElements();
 
@@ -35,8 +36,20 @@ class Multi_align_builder
 		for (var i=0; i< numOfIntervals ; i++)
 		{
 			this.div_base.innerHTML += this.createInterval(this._currentNum-1,this._currentNum + this.max_residues_per_row) ;
+			this.fixHeaderStyles();
 		}
 
+	}
+
+	fixHeaderStyles()
+	{
+		for ( var i=0;i<this.columnNumbershotspots.length;i++)
+		{
+			var column = this.columnNumbershotspots[i]+1;
+			$("#Seq1_"+column).addClass("Hotspot");
+			$("#Str2_"+column).addClass("Hotspot");
+		}
+		this.columnNumbershotspots=[];
 	}
 
 	createInterval(startInterval,endInterval)
@@ -131,8 +144,9 @@ class Multi_align_builder
 	{
 		var numContent = "r";
 		numContent = this.objAnalitycs.checkforStrConservation(col-1);
-		return "<div class='rTableCell'>"+numContent+"</div>";
+		return "<div id='Str"+row+"_"+col+"'  class='rTableCell'>"+numContent+"</div>";
 	}
+
 	addSeqCell(row,col,startInterval)
 	{
 		var numContent = "s";
@@ -143,7 +157,7 @@ class Multi_align_builder
 			this.seq_conservedResidues.push([startInterval,col]);
 			aditional_class="seqConservRes "
 		}
-		return "<div class='rTableCell "+aditional_class+"'>"+numContent+"</div>";
+		return "<div  id='Seq"+row+"_"+col+"' class='rTableCell "+aditional_class+"'>"+numContent+"</div>";
 	}
 
 	addResidueCell(row, col,startInterval)
@@ -159,6 +173,11 @@ class Multi_align_builder
 		}
 		else
 			console.log(row+"<->"+col+"->"+this.dataObj[row-this.dummyRows].strAnnotation[col-1]);
+		if (this.objAnalitycs.checkforHotspots(col-1))
+		{
+			//aditional_class+="Hotspot ";
+			this.columnNumbershotspots.push(col-1)
+		}
 		return "<div class='rTableCell "+aditional_class+"' id='Res"+row+"_"+col+"'> "+this.dataObj[row-this.dummyRows].Alignment[col-1]+" </div>";
 	}
 
@@ -205,6 +224,7 @@ class MSA_Analitycs
 		this.totHotspots=0;
 		this.totKstrRes=[];
 		this.totKHotspots=[];
+		this.conservedColums=[];
 
 		this.interfaceSimbol="&#8224";
 		this.coreSimbol = "&#8225";
@@ -223,7 +243,10 @@ class MSA_Analitycs
 			dicCounter[this.dataObj[i].Alignment[col]]=dicCounter[this.dataObj[i].Alignment[col]]?dicCounter[this.dataObj[i].Alignment[col]]+1:1;
 		}
 		if(dicCounter[this.dataObj[0].Alignment[col]] == this.dataObj.length)
+		{
+			this.conservedColums[col]={"SeqCons":true,"StrCons":false};
 			return this.dataObj[0].Alignment[col];
+		}
 		else
 			return ".";
 	}
@@ -236,15 +259,37 @@ class MSA_Analitycs
 			if(this.dataObj[i].strAnnotation!= undefined && 
 				this.dataObj[i].strAnnotation.length>0)
 			{
-				dicCounter[this.dataObj[i].strAnnotation[col]]=dicCounter[this.dataObj[i].strAnnotation[col]]?dicCounter[this.dataObj[i].strAnnotation[col]]+1:1;	
+				try{
+					dicCounter[this.dataObj[i].strAnnotation[col].toUpperCase()]=dicCounter[this.dataObj[i].strAnnotation[col].toUpperCase()]?dicCounter[this.dataObj[i].strAnnotation[col].toUpperCase()]+1:1;	
+				}
+				catch (err)
+				{
+					console.log(err);
+				}
+				
 			}
 			
 		}
 		//console.log(col+"->"+JSON.stringify(dicCounter));
 		if(dicCounter[this.dataObj[0].strAnnotation[col]] == this.dataObj.length)
+		{
+			if(this.conservedColums[col])
+				this.conservedColums[col]["StrCons"]=true
+			else
+				this.conservedColums[col]={"SeqCons":false,"StrCons":true};
 			return this.translateSrToSimbols(this.dataObj[0].strAnnotation[col]);
+		}
 		else
 			return ".";
+	}
+
+	checkforHotspots(col)
+	{
+		if(this.conservedColums[col]!= undefined &&
+			this.conservedColums[col]["SeqCons"] &&
+			this.conservedColums[col]["StrCons"])
+			return true
+		return false
 	}
 
 	translateSrToSimbols(strLetter)
